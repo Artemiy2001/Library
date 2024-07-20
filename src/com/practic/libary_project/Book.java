@@ -1,6 +1,12 @@
 package com.practic.libary_project;
 
-public class Book {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Book implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 2L;
 
     private final String bookTitle;
 
@@ -12,7 +18,6 @@ public class Book {
 
     private boolean isRented;
 
-    //sdsd
 
     public Book(String bookTitle, String author, int year, String isbn) {
         this.bookTitle = bookTitle;
@@ -23,13 +28,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "bookTitle='" + bookTitle + '\'' +
-                ", author='" + author + '\'' +
-                ", year=" + year +
-                ", isbn='" + isbn + '\'' +
-                ", isRented=" + isRented +
-                '}';
+        return "Название: " + bookTitle + ", автор: " + author +
+                ", год: " + year + ", isbn: " + isbn;
     }
 
     public String getBookTitle() {

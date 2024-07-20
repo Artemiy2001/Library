@@ -1,11 +1,25 @@
 package com.practic.libary_project;
 
+import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Library {
+public class Library implements Serializable {
 
-    private final List<Book> booksList = new ArrayList<>();
+    Path path = Path.of("resources", "library.out");
+
+    private List<Book> booksList = new ArrayList<>();
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public String toString() {
+        return "Library{" +
+                "booksList=" + booksList +
+                '}';
+    }
 
     public void addBook(Book book){
         booksList.add(book);
@@ -13,15 +27,96 @@ public class Library {
     }
 
     public void removeBook(String isbn){
-        for(Book book : booksList){
-            if (book.getIsbn().equals(isbn)){
-                booksList.remove(book);
-                System.out.println("Книга " + book.getBookTitle() + " была удалена");
+        for(int i = 0; i < booksList.size(); i++){
+            if (booksList.get(i).getIsbn().equals(isbn)){
+                System.out.println("Книга " + booksList.get(i).getBookTitle() + " была удалена");
+                booksList.remove(booksList.get(i));
             }else {
                 System.out.println("Такой книги нет в библиотеке");
             }
         }
     }
+
+    public void findBookByTitle(String title){
+        for(Book book : booksList) {
+            if (book.getBookTitle().equals(title)) {
+                System.out.println("Книга найдена:");
+                System.out.println(book);
+            } else {
+                System.out.println("Такой книги нет в библиотеке");
+            }
+        }
+    }
+
+    public void findBookByAuthor(String author){
+        int counterBooks = 1;
+        for(Book book : booksList) {
+            if (book.getAuthor().equals(author)) {
+                System.out.println(counterBooks + " - " + book);
+                counterBooks++;
+            }
+        }
+        if (counterBooks == 1){
+            System.out.println("Книг с таким автором не найдено");
+        }
+    }
+
+    public void findBookByYear(int year){
+        int counterBook = 1;
+        for(Book book : booksList) {
+            if (book.getYear() == year) {
+                System.out.println(counterBook + " - " + book);
+                counterBook++;
+            }
+        }
+        if (counterBook == 1){
+            System.out.println("Книг с таким годом не найдено");
+        }
+    }
+
+    public void rentBook(String isbn){
+        for(Book book : booksList) {
+            if (book.getIsbn().equals(isbn)) {
+                if (!book.isRented()){
+                    book.setRented(true);
+                    System.out.println("Книга " + book.getAuthor() + " была арендована");
+                }else {
+                    System.out.println("Книга уже арендована");
+                }
+            } else {
+                System.out.println("Такой книги нет в библиотеке");
+            }
+        }
+    }
+
+    public void returnBook(String isbn){
+        for(Book book : booksList) {
+            if (book.getIsbn().equals(isbn)) {
+                book.setRented(false);
+                System.out.println("Книга " + book.getAuthor() + " была возвращена");
+            } else {
+                System.out.println("Такой книги нет в библиотеке");
+            }
+        }
+    }
+
+    public void saveToFile() throws IOException {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
+            objectOutputStream.writeObject(booksList);
+        }
+    }
+
+    public void loadFromFile() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+            Object object = objectInputStream.readObject();
+            if (object instanceof List<?>){
+                booksList = (List<Book>) object;
+            }
+
+        }
+    }
+
+
 
 
 }
