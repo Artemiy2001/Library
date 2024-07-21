@@ -28,8 +28,8 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return "Название: " + bookTitle + ", автор: " + author +
-                ", год: " + year + ", isbn: " + isbn;
+        return "\n" + bookTitle + "\n" + author +
+                "\n" + year + " г.\nisbn - " + isbn;
     }
 
     public String getBookTitle() {

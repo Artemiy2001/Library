@@ -15,6 +15,11 @@ public class Utils {
         String author = scanner.nextLine();
 
         System.out.print("Введите год книги: ");
+        while (!scanner.hasNextInt()){
+            System.out.println("Некорректный год!");
+            scanner = new Scanner(System.in);
+            System.out.print("Введите год книги: ");
+        }
         int year = scanner.nextInt();
 
         Scanner scanner2 = new Scanner(System.in);

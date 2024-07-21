@@ -9,7 +9,11 @@ public class Library implements Serializable {
 
     Path path = Path.of("resources", "library.out");
 
-    private List<Book> booksList = new ArrayList<>();
+    private List<Book> booksList;
+
+    public Library(List<Book> booksList) {
+        this.booksList = booksList;
+    }
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -21,20 +25,37 @@ public class Library implements Serializable {
                 '}';
     }
 
-    public void addBook(Book book){
-        booksList.add(book);
-        System.out.println("Книга " + book.getBookTitle() + " была добавлена");
+    public void addBook(Book book) throws IOException {
+        boolean uniqueFlag = true;
+        for(Book books : booksList){
+            if (book.getIsbn().equals(books.getIsbn())) {
+                uniqueFlag = false;
+                break;
+            }
+        }
+        if (uniqueFlag){
+            booksList.add(book);
+            System.out.println("Книга " + book.getBookTitle() + " была добавлена");
+            saveToFile();
+        }else {
+            System.out.println("Код книги совпадает с существующей книгой");
+        }
+
+
     }
 
-    public void removeBook(String isbn){
+    public void removeBook(String isbn) throws IOException {
         for(int i = 0; i < booksList.size(); i++){
             if (booksList.get(i).getIsbn().equals(isbn)){
                 System.out.println("Книга " + booksList.get(i).getBookTitle() + " была удалена");
                 booksList.remove(booksList.get(i));
-            }else {
-                System.out.println("Такой книги нет в библиотеке");
+                saveToFile();
+                return;
             }
         }
+        System.out.println("Такой книги нет");
+
+
     }
 
     public void findBookByTitle(String title){
@@ -42,10 +63,10 @@ public class Library implements Serializable {
             if (book.getBookTitle().equals(title)) {
                 System.out.println("Книга найдена:");
                 System.out.println(book);
-            } else {
-                System.out.println("Такой книги нет в библиотеке");
+                return;
             }
         }
+        System.out.println("Такой книги нет в библиотеке");
     }
 
     public void findBookByAuthor(String author){
@@ -65,7 +86,7 @@ public class Library implements Serializable {
         int counterBook = 1;
         for(Book book : booksList) {
             if (book.getYear() == year) {
-                System.out.println(counterBook + " - " + book);
+                System.out.println(counterBook + ". " + book);
                 counterBook++;
             }
         }
@@ -74,12 +95,13 @@ public class Library implements Serializable {
         }
     }
 
-    public void rentBook(String isbn){
+    public void rentBook(String isbn) throws IOException {
         for(Book book : booksList) {
             if (book.getIsbn().equals(isbn)) {
                 if (!book.isRented()){
                     book.setRented(true);
                     System.out.println("Книга " + book.getAuthor() + " была арендована");
+                    saveToFile();
                 }else {
                     System.out.println("Книга уже арендована");
                 }
@@ -89,11 +111,12 @@ public class Library implements Serializable {
         }
     }
 
-    public void returnBook(String isbn){
+    public void returnBook(String isbn) throws IOException {
         for(Book book : booksList) {
             if (book.getIsbn().equals(isbn)) {
                 book.setRented(false);
                 System.out.println("Книга " + book.getAuthor() + " была возвращена");
+                saveToFile();
             } else {
                 System.out.println("Такой книги нет в библиотеке");
             }

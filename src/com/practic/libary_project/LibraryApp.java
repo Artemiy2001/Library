@@ -1,13 +1,14 @@
 package com.practic.libary_project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LibraryApp {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-        Library library = new Library();
+        Library library = new Library(new ArrayList<>());
         library.loadFromFile();
 
         Scanner scanner = new Scanner(System.in);
@@ -19,6 +20,11 @@ public class LibraryApp {
 
         while (exitProgram){
             displayMenu();
+            while (!scanner.hasNextInt() || scanner.nextInt() > 9){
+                System.out.println("Некорректное действие!\n");
+                scanner = new Scanner(System.in);
+                displayMenu();
+            }
             int action = scanner.nextInt();
             exitProgram = handleInputUser(action, library);
             System.out.println();
@@ -38,8 +44,10 @@ public class LibraryApp {
                 5 - Поиск книги по году
                 6 - Взять книгу в прокат
                 7 - Вернуть книгу
-                8 - Выйти""");
+                8 - Выйти
+                """);
         System.out.print("Выберите действие: ");
+
 
     }
 
@@ -67,7 +75,13 @@ public class LibraryApp {
             case 5 -> {
                 Scanner year = new Scanner(System.in);
                 System.out.print("Введите год книги: ");
-                library.findBookByYear(year.nextInt());
+                if (year.hasNextInt()){
+                    library.findBookByYear(year.nextInt());
+                }else {
+                    System.out.println("Некорректный ввод!");
+                    return true;
+                }
+
             }
             case 6 -> {
                 Scanner isbn = new Scanner(System.in);
