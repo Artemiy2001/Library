@@ -28,8 +28,15 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
+        String rent;
+        if (isRented){
+            rent = "Книга в аренде";
+        }else {
+            rent = "Книга доступна";
+        }
         return "\n" + bookTitle + "\n" + author +
-                "\n" + year + " г.\nisbn - " + isbn;
+                "\n" + year + " г.\nisbn - " + isbn +
+                "\n" + rent;
     }
 
     public String getBookTitle() {

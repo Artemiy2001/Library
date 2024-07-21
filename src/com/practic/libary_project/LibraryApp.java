@@ -20,14 +20,19 @@ public class LibraryApp {
 
         while (exitProgram){
             displayMenu();
-            while (!scanner.hasNextInt() || scanner.nextInt() > 9){
+            while (!scanner.hasNextInt()){
                 System.out.println("Некорректное действие!\n");
                 scanner = new Scanner(System.in);
                 displayMenu();
             }
             int action = scanner.nextInt();
-            exitProgram = handleInputUser(action, library);
-            System.out.println();
+            if (action > 0 && action < 10){
+                exitProgram = handleInputUser(action, library);
+                System.out.println();
+            }else {
+                System.out.println("Некорректное действие!\n");
+            }
+
         }
 
 

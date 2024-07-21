@@ -73,7 +73,8 @@ public class Library implements Serializable {
         int counterBooks = 1;
         for(Book book : booksList) {
             if (book.getAuthor().equals(author)) {
-                System.out.println(counterBooks + " - " + book);
+                System.out.println();
+                System.out.println(counterBooks + ". " + book);
                 counterBooks++;
             }
         }
@@ -86,6 +87,7 @@ public class Library implements Serializable {
         int counterBook = 1;
         for(Book book : booksList) {
             if (book.getYear() == year) {
+                System.out.println();
                 System.out.println(counterBook + ". " + book);
                 counterBook++;
             }
@@ -100,27 +102,27 @@ public class Library implements Serializable {
             if (book.getIsbn().equals(isbn)) {
                 if (!book.isRented()){
                     book.setRented(true);
-                    System.out.println("Книга " + book.getAuthor() + " была арендована");
+                    System.out.println("Книга " + book.getBookTitle() + " была арендована");
                     saveToFile();
                 }else {
                     System.out.println("Книга уже арендована");
                 }
-            } else {
-                System.out.println("Такой книги нет в библиотеке");
+                return;
             }
         }
+        System.out.println("Такой книги нет в библиотеке");
     }
 
     public void returnBook(String isbn) throws IOException {
         for(Book book : booksList) {
             if (book.getIsbn().equals(isbn)) {
                 book.setRented(false);
-                System.out.println("Книга " + book.getAuthor() + " была возвращена");
+                System.out.println("Книга " + book.getBookTitle() + " была возвращена");
                 saveToFile();
-            } else {
-                System.out.println("Такой книги нет в библиотеке");
+                return;
             }
         }
+        System.out.println("Такой книги нет в библиотеке");
     }
 
     public void saveToFile() throws IOException {
